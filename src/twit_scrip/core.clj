@@ -46,8 +46,7 @@
         tweet (:text status)]
     (println (str "[" handle "] " tweet))))
 
-(defn -main
-  [& args]
+(defn -main [& args]
   (let [statuses (get-6w-tweets)]
     (doseq [status statuses]
       (print-status status))))
