@@ -21,29 +21,33 @@
 (def search-url (str search-base search-query "&result_type=recent&count=100"))
 
 (defn get-token []
-  (let [
-      options {
-        :body token-data
-        :headers {
-          :authorization token-auth,
-          :content-type token-content-type
-        }}
-      result (client/post token-url options)
-      body-json (json/read-str (:body result) :key-fn keyword)]
+  (let [options {
+          :body token-data
+          :headers {
+            :authorization token-auth,
+            :content-type token-content-type
+          }}
+        result (client/post token-url options)
+        body-json (json/read-str (:body result) :key-fn keyword)]
     (:access_token body-json)))
 
 (defn get-6w-tweets []
-  (let [
-      options {
-        :headers {
-          :authorization (str "Bearer " (get-token))
-        }}
-      result (client/get search-url options)
-      body-json (json/read-str (:body result) :key-fn keyword)]
+  (let [options {
+          :headers {
+            :authorization (str "Bearer " (get-token))
+          }}
+        result (client/get search-url options)
+        body-json (json/read-str (:body result) :key-fn keyword)]
     (:statuses body-json)))
+
+(defn print-status [status]
+  (let [user (:user status)
+        handle (:screen_name user)
+        tweet (:text status)]
+    (println (str "[" handle "] " tweet))))
 
 (defn -main
   [& args]
   (let [statuses (get-6w-tweets)]
     (doseq [status statuses]
-      (println (:text status)))))
+      (print-status status))))
