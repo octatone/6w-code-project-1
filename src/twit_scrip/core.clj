@@ -8,7 +8,6 @@
 
 (def token-url "https://api.twitter.com/oauth2/token")
 (def token-content-type "application/x-www-form-urlencoded;charset=UTF-8")
-(def token-data "grant_type=client_credentials")
 
 (def search-base "https://api.twitter.com/1.1/search/tweets.json?q=")
 (def search-query "6wunderkinder")
@@ -17,10 +16,7 @@
 (defn get-token []
   (let [options {
           :basic-auth [app-consumer-key app-consumer-secret]
-          :body token-data
-          :headers {
-            :content-type token-content-type
-          }}
+          :form-params {:grant_type "client_credentials"}}
         result (client/post token-url options)
         body-json (json/read-str (:body result) :key-fn keyword)]
     (:access_token body-json)))
