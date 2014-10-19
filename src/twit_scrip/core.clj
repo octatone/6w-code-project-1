@@ -7,7 +7,6 @@
 (def app-consumer-secret (System/getenv "SECRET"))
 
 (def token-url "https://api.twitter.com/oauth2/token")
-(def token-content-type "application/x-www-form-urlencoded;charset=UTF-8")
 
 (def search-base "https://api.twitter.com/1.1/search/tweets.json?q=")
 (def search-query "6wunderkinder")
