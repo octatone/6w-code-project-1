@@ -1,17 +1,11 @@
 (ns twit-scrip.core
-  (:require [clojure.data.codec.base64 :as b64])
   (:require [clj-http.client :as client])
   (:require [clojure.data.json :as json])
   (:gen-class))
 
-(defn string-to-base64-string [original]
-  (String. (b64/encode (.getBytes original)) "UTF-8"))
-
 (def app-consumer-key (System/getenv "KEY"))
 (def app-consumer-secret (System/getenv "SECRET"))
 
-(def token-auth (str "Basic "
-    (string-to-base64-string (str app-consumer-key ":" app-consumer-secret))))
 (def token-url "https://api.twitter.com/oauth2/token")
 (def token-content-type "application/x-www-form-urlencoded;charset=UTF-8")
 (def token-data "grant_type=client_credentials")
@@ -22,9 +16,9 @@
 
 (defn get-token []
   (let [options {
+          :basic-auth [app-consumer-key app-consumer-secret]
           :body token-data
           :headers {
-            :authorization token-auth,
             :content-type token-content-type
           }}
         result (client/post token-url options)
